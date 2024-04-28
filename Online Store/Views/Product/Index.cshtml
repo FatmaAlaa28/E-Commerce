@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Online_Store.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-square"></i>&nbsp;Create New Item</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>Action
+            <th>
+                    @*  <th>
+                @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                @Html.DisplayNameFor(model => model.Category)
+                </th>
+
+                <th>
+                @Html.DisplayNameFor(model => model.Stock)
+                </th>
+                <th>
+                @Html.DisplayNameFor(model => model.Weight)
+                </th>
+                <th>
+                @Html.DisplayNameFor(model => model.Brand)
+                </th>
+                <th></th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @*  @Html.DisplayFor(modelItem => item.Image) *@
+                    <img src="~/Image/@item.Image" alt="Product_Image_Here" style="border-radius:50%; width:70px;height:70px">
+
+                </td>
+                @*   <td>
+            @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Category)
+            </td>
+
+            <td>
+            @Html.DisplayFor(modelItem => item.Stock)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Weight)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Brand)
+            </td> *@
+
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProductId"><i class="bi bi-pencil-square"></i>Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.ProductId"><i class="bi bi-eye"></i>Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.ProductId"><i class="bi bi-trash"></i>Delete</a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
