@@ -12,8 +12,8 @@ using Online_Store.Data;
 namespace Online_Store.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240428175834_initiate")]
-    partial class initiate
+    [Migration("20240428222607_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

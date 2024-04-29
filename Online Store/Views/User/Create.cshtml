@@ -1,45 +1,22 @@
 ﻿@model Online_Store.Models.User
-
-@{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
 <!DOCTYPE html>
-<!-- Created By CodingLab - www.codinglabweb.com -->
-@{
-    Layout = null;
-}
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <title> Responsive Registration Form | CodingLab </title>
     <link rel="stylesheet" href="~/css/SignUp.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <@* style>
-        /* إخفاء Navigation */
-        .navigation {
-        display: none;
-        }
-        /* إخفاء Footer */
-        .footer {
-        display: none;
-        }
-        </style> *@
 </head>
 <body>
-
-
-    <!-- Navigation -->
-    <nav class="navigation">
-        <!-- أضف عناصر النافيجيشن هنا -->
-    </nav>
-
 
     <div class="container">
         <div class="title">Registration</div>
         <div class="content">
-            <form asp-action="Create" method="post">
+            <form asp-controller="User" asp-action="Create" method="post">
+                @*   <input type="hidden" asp-for="UserID" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+
+
                 <div class="user-details">
                     <div class="input-box">
                         <label asp-for="FirstName" class="control-label"></label>
@@ -70,23 +47,17 @@
                         <label asp-for="ConfirmPassword" class="control-label"></label>
                         <input asp-for="ConfirmPassword" class="form-control" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
                     </div>
                 </div>
-                <div class="gender-details">
-                    <input type="radio" name="gender" id="dot-1">
-                    <input type="radio" name="gender" id="dot-2">
-                    <span class="gender-title">Gender</span>
-                    <div class="category">
-                        <label for="dot-1">
-                            <span class="dot one"></span>
-                            <span class="gender">Male</span>
-                        </label>
-                        <label for="dot-2">
-                            <span class="dot two"></span>
-                            <span class="gender">Female</span>
-                        </label>
-                    </div>
+                <div class="form-group">
+                    <label asp-for="Gender" class="control-label"></label>
+                    <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<Gender>()">
+                        <option value="">-- Select Gender --</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
                 </div>
+
                 <div class="button">
                     <input type="submit" value="Register">
                 </div>
@@ -95,17 +66,11 @@
     </div>
 
 
-    <!-- Footer -->
-    <footer class="footer">
-        <!-- أضف محتوى الفوتر هنا -->
-    </footer>
+ 
 
 
 </body>
 </html>
-
-
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
