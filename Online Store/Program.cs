@@ -16,6 +16,15 @@ namespace Online_Store
             {
                 Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddSession(
+                options =>
+                {
+                    options.IdleTimeout = TimeSpan.FromMinutes(30);
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+                }
+                );
+
 
             var app = builder.Build();
 
@@ -37,7 +46,7 @@ namespace Online_Store
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
+            app.UseSession();
             app.Run();
         }
     }

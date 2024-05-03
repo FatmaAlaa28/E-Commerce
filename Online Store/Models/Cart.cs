@@ -13,7 +13,7 @@ namespace Online_Store.Models
         public int Quantity { get; set; }
 
         public int UserId { get; set; }
-        public int ProductCartId { get; set; }
+        //public int ProductCartId { get; set; }
 
         public ICollection<ProductCart> ProductCards { get; set; }
 

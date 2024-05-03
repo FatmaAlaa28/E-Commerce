@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Online_Store.Data;
 using Online_Store.Models;
-
+ 
 namespace Online_Store.Controllers
 {
     public class ProductController : Controller
@@ -178,5 +178,34 @@ namespace Online_Store.Controllers
         {
             return (_context.products?.Any(e => e.ProductId == id)).GetValueOrDefault();
         }
+        public IActionResult ClothesIndex()
+        {
+            ViewBag.Model =_context.products.Where(e=>e.Category==Category.Clothes).ToList();
+            return View();
+        }
+        public IActionResult FurnituresIndex()
+        {
+            ViewBag.Model = _context.products.Where(W => W.Category== Category.Furnitures).ToList();
+            return View();
+        }
+        public IActionResult FoodIndex()
+        {
+            ViewBag.Model = _context.products.Where(W => W.Category == Category.Foods).ToList();
+            return View();
+        }
+        public IActionResult ElectronicsIndex()
+        {
+            ViewBag.Model = _context.products.Where(W => W.Category == Category.Electronics).ToList();
+            return View();
+        }
+        public IActionResult BooksIndex()
+        {
+            ViewBag.Model = _context.products.Where(W => W.Category == Category.Books).ToList();
+            return View();
+        }
+
+       
+
+
     }
 }

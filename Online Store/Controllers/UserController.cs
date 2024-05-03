@@ -86,6 +86,15 @@ namespace Online_Store.Controllers
             var re = AuthenticateUser(user.Email, user.Password);
             if (re != null)
             {
+               
+                //Cart cart = new Cart
+                //{
+                //   UserId =user.UserID,
+                //    Quantity = 1,
+                //};
+                //_context.Carts.Add(cart);
+                //_context.SaveChanges();
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -102,6 +111,7 @@ namespace Online_Store.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Email == email);
             if (user != null && user.Password == password)
             {
+                HttpContext.Session.SetInt32("UserID", user.UserID);
                 return user;
             }
             return null;

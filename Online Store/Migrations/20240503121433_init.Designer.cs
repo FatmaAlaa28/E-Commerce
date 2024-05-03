@@ -12,7 +12,7 @@ using Online_Store.Data;
 namespace Online_Store.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240428222607_init")]
+    [Migration("20240503121433_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,9 +31,6 @@ namespace Online_Store.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"), 1L, 1);
-
-                    b.Property<int>("ProductCartId")
-                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");

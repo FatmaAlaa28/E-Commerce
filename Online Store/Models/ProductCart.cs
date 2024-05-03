@@ -5,6 +5,7 @@ namespace Online_Store.Models
     public class ProductCart
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProductCartId { get; set; }
 
         public int CartId { get; set; }

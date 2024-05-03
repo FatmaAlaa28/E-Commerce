@@ -3,8 +3,36 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-<h1>Product Details</h1>
+ 
+<link rel="stylesheet" href="~/css/descripe_styles.css" />
+<section class="product">
+    <div class="product__photo">
+        <div class="photo-container">
+            <div class="photo-main">
+                <div class="controls">
+                    <i class="material-icons">share</i>
+                    <i class="material-icons">favorite_border</i>
+                </div>
+                <img src="~/Image/@Model.Image" alt="">
+            </div>
+        </div>
+    </div>
+    <div class="product__info">
+        <div class="title">
+            <h1> @Html.DisplayFor(model => model.ProductName)</h1>
+            <span>@Html.DisplayFor(model => model.Category)</span>
+        </div>
+        <div class="price">
+            EGP <span> @Html.DisplayFor(model => model.Price)</span>
+        </div>
+        <div class="description">
+            <h3>Description</h3>
+                @Html.DisplayFor(model => model.Description)
+        </div>
+        <button class="buy--btn">ADD TO CART</button>
+    </div>
+</section>
+@* <h1>Product Details</h1>
 
 <div>
     <h4><img src="~/Image/@Model.Image" style="border-radius:50%; width:110px;height:110px"></h4>
@@ -39,7 +67,7 @@
         </dt>
         <dd class = "col-sm-10">
         @Html.DisplayFor(model => model.Image)
-        </dd> *@
+        </dd> 
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Stock)
         </dt>
@@ -63,4 +91,4 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.ProductId">Edit</a> |
     <a asp-action="Index">Back to List</a>
-</div>
+</div> *@ 

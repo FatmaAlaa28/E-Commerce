@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Online_Store.Models.Product>
+ 
+ 
+ <!DOCTYPE html>
+ <html lang="en">
+     <head>
+         <meta charset="utf-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/css/style1.css" />
+    <script src="~/js/site.js" defer type="module"></script>
+
+     </head>
+     <body>
+ 
+    <div class="breadcrumbs d-flex flex-row align-items-center">
+        <ul>
+            <li><a href="~/Home/Index">Home</a></li>
+            <li class="active"><a href="~/Product/ClothesIndex"><i class="fa fa-angle-right" aria-hidden="true"></i>Clothes</a></li>
+        </ul>
+       <br />
+    </div>
+            
+
+
+    <div class="main-container">
+         @foreach(var item in(IEnumerable<Product>) ViewBag.Model){ 
+             <div class="product">
+                <img src="~/Image/@item.Image" alt="" />
+            <div class="product-desc">
+                    <h3><a asp-action="Details" asp-route-id="@item.ProductId"> @Html.DisplayFor(modelItem => item.ProductName)</a></h3>
+                    <p>@Html.DisplayFor(modelItem => item.Price) EGP </p>
+                <div >
+                        <form method="post" action="@Url.Action("AddToCart", "Cart", new { id = item.ProductId })">
+                           @Html.AntiForgeryToken()
+                           <input type="hidden" name="action" value="ClothesIndex" />
+
+
+                            <button type="submit" class="bottons"  >Add to cart</button>
+                    </form>
+                 </div>
+            </div>
+             </div>
+             }
+         </div>
+
+
+    @if (ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+             
+                alert("@ViewBag.Message");
+        </script>
+    }
+    
+     </body>
+     </html>
