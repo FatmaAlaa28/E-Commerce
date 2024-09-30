@@ -12,10 +12,12 @@ namespace Online_Store
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddDbContext<ApplicationDbContext>(Options =>
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
-                Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddHttpContextAccessor(); // Register IHttpContextAccessor
+
             builder.Services.AddSession(
                 options =>
                 {
@@ -42,12 +44,14 @@ namespace Online_Store
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.UseSession();
+
             app.Run();
+
+
         }
     }
 }

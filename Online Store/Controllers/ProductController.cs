@@ -84,6 +84,26 @@ namespace Online_Store.Controllers
             _context.products.Add(product);
             _context.SaveChanges();
             TempData["successData"] = "Item has been added successfully";
+            if (product.Category == Category.Clothes)
+            {
+                return RedirectToAction("ClothesIndex"); // توجيه المستخدم إلى صفحة الملابس
+            }
+            else if (product.Category == Category.Electronics)
+            {
+                return RedirectToAction("ElectronicsIndex");
+            }
+            else if (product.Category == Category.Books)
+            {
+                return RedirectToAction("BooksIndex");
+            }
+            else if (product.Category == Category.Furnitures)
+            {
+                return RedirectToAction("FurnituresIndex");
+            }
+            else if (product.Category == Category.Foods)
+            {
+                return RedirectToAction("FoodIndex");
+            }
             return RedirectToAction("Index");
         }
 
@@ -108,7 +128,7 @@ namespace Online_Store.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,Description,Price,Category,Image,Stock,Weight,Brand")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,Description,Price,Category,clientFile,Image,Stock,Weight,Brand")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -118,6 +138,37 @@ namespace Online_Store.Controllers
 
             try
             {
+                if (product.clientFile != null)
+                {
+                    string myUpload = Path.Combine(_environment.WebRootPath, "Image");
+                    string fileName = product.clientFile.FileName;
+                    string extension = Path.GetExtension(fileName).ToLower();
+
+                    if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif")
+                    {
+                        string fullPath = Path.Combine(myUpload, fileName);
+                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            await product.clientFile.CopyToAsync(stream);
+                        }
+                        product.Image = fileName;
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("clientFile", "The file should be an image with one of the following extensions: .jpg, .jpeg, .png, .gif");
+                        return View(product);
+                    }
+                }
+                else
+                {
+                    // Keep the existing image if no new file is uploaded
+                    var existingProduct = await _context.products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == id);
+                    if (existingProduct != null)
+                    {
+                        product.Image = existingProduct.Image;
+                    }
+                }
+
                 _context.Update(product);
                 await _context.SaveChangesAsync();
             }
@@ -134,8 +185,11 @@ namespace Online_Store.Controllers
             }
             return RedirectToAction(nameof(Index));
 
+
             return View(product);
         }
+
+
 
         // GET: Product/Delete/5
         public async Task<IActionResult> Delete(int? id)

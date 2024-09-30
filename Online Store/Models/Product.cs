@@ -14,7 +14,6 @@ namespace Online_Store.Models
         public int ProductId { get; set; }
 
         [Required, StringLength(25, MinimumLength = 3, ErrorMessage = "Product Name can't be less than 3 longer than 20  characters")]
-        [RegularExpression(@"^[a-zA-Z0-9_.-]+$", ErrorMessage = "Product name should contain characters and numbers only not any special characters")]
         public string ProductName { get; set; }
 
         [Required, StringLength(400, MinimumLength = 0, ErrorMessage = "Description can't be less than 0 longer than 20  characters")]
@@ -28,11 +27,13 @@ namespace Online_Store.Models
         [Required(ErrorMessage = "The Category field is required.")]
         public Category? Category { get; set; }
 
-        //[FileExtensions(Extensions = "jpg,jpeg,png",ErrorMessage ="The file should be only image")]
         [DefaultValue("default.jpg")]
-        public string Image { get; set; }
+        public string? Image { get; set; }
+
         [NotMapped]
-        public IFormFile clientFile { get; set; }
+        public IFormFile? clientFile { get; set; }
+
+
 
         [Required]
         [RegularExpression(@"^[0-9]+$", ErrorMessage = "Stock should contain numbers only")]
@@ -45,6 +46,6 @@ namespace Online_Store.Models
         public string Brand { get; set; }
 
         public ICollection<Transaction> Transactions { get; set; }
-        public ICollection<ProductCart> ProductCards { get; set; }
+        public ICollection<ProductCart> ProductCarts { get; set; }
     }
 }

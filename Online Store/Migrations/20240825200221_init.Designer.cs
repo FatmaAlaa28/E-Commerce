@@ -12,14 +12,14 @@ using Online_Store.Data;
 namespace Online_Store.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240503121433_init")]
+    [Migration("20240825200221_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.29")
+                .HasAnnotation("ProductVersion", "6.0.30")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -31,9 +31,6 @@ namespace Online_Store.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"), 1L, 1);
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -54,18 +51,8 @@ namespace Online_Store.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderID"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(11)
-                        .HasColumnType("nvarchar(11)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -123,7 +110,6 @@ namespace Online_Store.Migrations
                         .HasColumnType("nvarchar(400)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
@@ -158,6 +144,9 @@ namespace Online_Store.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("ProductCartId");
@@ -208,10 +197,6 @@ namespace Online_Store.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("ConfirmPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreditCardNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -237,10 +222,10 @@ namespace Online_Store.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
+                    b.Property<byte[]>("Password")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasMaxLength(64)
+                        .HasColumnType("varbinary(64)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -299,7 +284,7 @@ namespace Online_Store.Migrations
                         .IsRequired();
 
                     b.HasOne("Online_Store.Models.Product", "Product")
-                        .WithMany("ProductCards")
+                        .WithMany("ProductCarts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -343,7 +328,7 @@ namespace Online_Store.Migrations
 
             modelBuilder.Entity("Online_Store.Models.Product", b =>
                 {
-                    b.Navigation("ProductCards");
+                    b.Navigation("ProductCarts");
 
                     b.Navigation("Transactions");
                 });

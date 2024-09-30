@@ -8,9 +8,7 @@ namespace Online_Store.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CartId { get; set; }
-        [Required]
-        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Quantity should contain numbers only")]
-        public int Quantity { get; set; }
+       
 
         public int UserId { get; set; }
         //public int ProductCartId { get; set; }

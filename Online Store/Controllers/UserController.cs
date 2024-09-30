@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Online_Store.Data;
 using Online_Store.Models;
+using System.Security.Cryptography;
+using System.Text;
 namespace Online_Store.Controllers
 {
     public class UserController : Controller
@@ -61,18 +63,46 @@ namespace Online_Store.Controllers
             user.Address = "NULL";
             user.CreditCardNumber = "0";
             user.Phone = "0";
-            if (user.Password != user.ConfirmPassword)
+            if (user.Password == null || user.ConfirmPassword == null || !user.Password.SequenceEqual(user.ConfirmPassword))
             {
                 ModelState.AddModelError("ConfirmPassword", "Password and Confirm Password do not match.");
                 return View(user);
             }
+
+            // Hash the password
+            user.Password = HashPassword(user.Password);
+
+            // Clear ConfirmPassword for security reasons
+            user.ConfirmPassword = null;
+            var email = from us in _context.Users where us.Email == user.Email select user.Email;
+            if ((email.Any()))
+            {
+                ViewBag.Title = "invalid";
+                return View();
+            }
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(LogIn));
+            //if (user.Password != user.ConfirmPassword)
+            //{
+            //    ModelState.AddModelError("ConfirmPassword", "Password and Confirm Password do not match.");
+            //    return View(user);
+            //}
+            //user.Password = HashPassword(user.Password);
+            //user.ConfirmPassword = HashPassword(user.ConfirmPassword);
+            //_context.Users.Add(user);
+            //await _context.SaveChangesAsync();
+            //return RedirectToAction(nameof(LogIn));
 
         }
 
-
+        private byte[] HashPassword(byte[] password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                return sha256.ComputeHash(password);
+            }
+        }
 
         [HttpGet]
         public IActionResult LogIn()
@@ -86,18 +116,9 @@ namespace Online_Store.Controllers
             var re = AuthenticateUser(user.Email, user.Password);
             if (re != null)
             {
-               
-                //Cart cart = new Cart
-                //{
-                //   UserId =user.UserID,
-                //    Quantity = 1,
-                //};
-                //_context.Carts.Add(cart);
-                //_context.SaveChanges();
-
+         
                 return RedirectToAction("Index", "Home");
             }
-
             else
             {
                 ModelState.AddModelError("", "Invalid email or password");
@@ -106,19 +127,30 @@ namespace Online_Store.Controllers
             return View(user);
 
         }
-        public User AuthenticateUser(string email, string password)
+        public User AuthenticateUser(string email, byte[] password)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user != null && user.Password == password)
+            if (user != null && VerifyPassword(password, user.Password))
             {
+                // Authentication successful
                 HttpContext.Session.SetInt32("UserID", user.UserID);
                 return user;
             }
             return null;
-
-
         }
+        private bool VerifyPassword(byte[] enteredPassword, byte[] hashedPassword)
+        {
+            if (enteredPassword == null || hashedPassword == null)
+            {
+                return false; // Password or hashed password is null, cannot verify
+            }
 
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] enteredHashedBytes = sha256.ComputeHash(enteredPassword);
+                return enteredHashedBytes.SequenceEqual(hashedPassword);
+            }
+        }
 
         // GET: User/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -143,20 +175,38 @@ namespace Online_Store.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("UserID,NationalID,FirstName,LastName,Phone,userName,Email,Password,ConfirmPassword,Address,CreditCardNumber,Age")] User user)
         {
+
             if (id != user.UserID)
             {
                 return NotFound();
             }
 
-
             try
             {
-                if (user.Password != user.ConfirmPassword)
+                // Retrieve the existing user from the database
+                var existingUser = await _context.Users.FindAsync(id);
+                if (existingUser == null)
                 {
-                    ModelState.AddModelError("ConfirmPassword", "Password and Confirm Password do not match.");
-                    return View(user);
+                    return NotFound();
                 }
-                _context.Update(user);
+
+                // Update properties of the existing user
+                existingUser.NationalID = user.NationalID;
+                existingUser.FirstName = user.FirstName;
+                existingUser.LastName = user.LastName;
+                existingUser.Phone = user.Phone;
+                existingUser.userName = user.userName;
+                existingUser.Email = user.Email;
+                existingUser.Address = user.Address;
+                existingUser.CreditCardNumber = user.CreditCardNumber;
+
+                // Check if a new password is provided
+                if (user.Password != null && user.Password.Length > 0)
+                {
+                    existingUser.Password = user.Password; // Update password
+                }
+
+                _context.Update(existingUser);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -170,9 +220,9 @@ namespace Online_Store.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
 
-            return View(user);
+            return RedirectToAction("Index", "Home");
+            //return View();
         }
 
         // GET: User/Delete/5

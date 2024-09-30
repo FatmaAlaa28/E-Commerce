@@ -14,11 +14,6 @@ namespace Online_Store.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime OrderDate { get; set; }
 
-        [Required, StringLength(11, ErrorMessage = "Phone Number Must be 11 Digit")]
-        public string Phone { get; set; }
-        [Required]
-        [StringLength(100, MinimumLength = 4, ErrorMessage = "Add True Address can't be less than 4 longer than 100 characters")]
-        public string Address { get; set; }
         [Required]
         [RegularExpression(@"^[0-9.]+$", ErrorMessage = "Price should contain numbers only")]
         public decimal TotalPrice { get; set; }
